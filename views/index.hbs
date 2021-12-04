@@ -15,10 +15,10 @@
         </ul>
     {{/if}}
 
-    {{#if fileVisible}}
+    {{#if fileContentVisible}}
         <h3>Содержимое файла</h3>
         <ul>
-            {{#each emails}}
+            {{#each fileContent}}
                 <li>{{this}}</li>
             {{/each}}
         </ul>
