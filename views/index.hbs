@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Контакты</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+    {{#if directoryContentVisible}}
+        <h3>Содержимое директории</h3>
+        <ul>
+            {{#each directoryContent}}
+                <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
+
+    {{#if fileVisible}}
+        <h3>Содержимое файла</h3>
+        <ul>
+            {{#each emails}}
+                <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
+
+</body>
+<html>
