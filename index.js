@@ -6,7 +6,7 @@ const  { getDirectoryItems, isDirectory } = require('./utils')
 const app = express()
 app.set("view engine", "hbs");
 
-app.use("/", function(request, response){
+app.get("/", function(request, response){
     const CWD = process.cwd();
     
     (async (filepath) => {
@@ -18,6 +18,11 @@ app.use("/", function(request, response){
             });
         }
     })(CWD);
+});
+
+app.use("/about", function(request, response){
+    let userName = request.query.name;
+    response.send("<h1>Информация</h1><p>" + userName + "</p>");
 });
 
 app.listen(3000)

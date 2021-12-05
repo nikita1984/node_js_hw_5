@@ -10,7 +10,8 @@
         <h3>Содержимое директории</h3>
         <ul>
             {{#each directoryContent}}
-                <li>{{this}}</li>
+                <li><a href="/about?name=directory">{{this}}</a>
+                </li>
             {{/each}}
         </ul>
     {{/if}}
