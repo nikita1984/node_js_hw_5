@@ -47,39 +47,32 @@ const getContent = async (filepath) => {
     if (isDirectory(filepath)) {
         const directoryItems = await getDirectoryItems(filepath);
 
-        const directoryContentArray = [];
+        const templateArray = [];
 
         for (item of directoryItems){
             let templateString = `<p>
-                <a href="/content?path=${path.join(filepath, item)}">${item}</a>
+                <a href="/?path=${path.join(filepath, item)}">${item}</a>
             </p>`;
 
-            directoryContentArray.push(templateString);
+            templateArray.push(templateString);
         }
         
-        const directoryContentHTML = directoryContentArray.join('<br>');
-
-        return directoryContentHTML;
+        return templateArray.join('<br>');
     }
 
     if (isFile(filepath)) {
         const content = await getFileContents(filepath);
 
-        const fileContentsTemplateArray = [];
+        const templateArray = [];
         for (item of content) {
             let templateString = `<p>${item}</p>`;
 
-            fileContentsTemplateArray.push(templateString);
+            templateArray.push(templateString);
         }
-        const HTMLContent = fileContentsTemplateArray.join('<br>');
-
-        return HTMLContent;
+        return templateArray.join('<br>');
     }
 }
 
-
 module.exports = {
-    getDirectoryItems: getDirectoryItems,
-    isDirectory: isDirectory,
     getContent: getContent,
 };

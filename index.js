@@ -1,27 +1,21 @@
 #!/usr/bin/env node
 const express = require('express')
 
-const path = require('path')
-
-const  { getDirectoryItems, isDirectory, getContent } = require('./utils')
-
-const CWD = process.cwd();
+const  { getContent } = require('./utils')
 
 const app = express()
 app.set("view engine", "hbs");
 
-app.get("/", function(request, response){
-    (async () => {
-        const directoryContentHTML = await getContent(CWD);
-        response.send(directoryContentHTML);
-    })();
-});
+app.use("/", function(request, response){
+    let filepath = request.query.path;
 
-app.use("/content", function(request, response){
-    const queryPath = request.query.path;
+    if (filepath === undefined) {
+        filepath = process.cwd();
+    }
+
     (async () => {
-        const directoryContentHTML = await getContent(queryPath);
-        response.send(directoryContentHTML);
+        const contentInHTML = await getContent(filepath);
+        response.send(contentInHTML);
     })();
 });
 
