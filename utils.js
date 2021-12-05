@@ -26,7 +26,11 @@ const path = require('path')
     return fs.lstatSync(filepath).isDirectory();
 }
 
-const renderContent = async (filepath, response) => {
+const isFile = function (filepath) {
+    return fs.lstatSync(filepath).isFile();
+}
+
+const getContent = async (filepath) => {
     if (isDirectory(filepath)) {
         const directoryItems = await getDirectoryItems(filepath);
 
@@ -42,7 +46,13 @@ const renderContent = async (filepath, response) => {
         
         const directoryContentHTML = directoryContentArray.join('<br>');
 
-        response.send(directoryContentHTML);
+        return directoryContentHTML;
+    }
+
+    if (isFile(filepath)) {
+        const directoryContentHTML = '<p>isFile</p>'
+
+        return directoryContentHTML;
     }
 }
 
@@ -50,5 +60,5 @@ const renderContent = async (filepath, response) => {
 module.exports = {
     getDirectoryItems: getDirectoryItems,
     isDirectory: isDirectory,
-    renderContent: renderContent,
+    getContent: getContent,
 };
