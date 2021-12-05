@@ -2,6 +2,9 @@
   "name": "hw_4",
   "version": "1.0.0",
   "description": "",
+  "bin": {
+    "myNodeProgramm": "./index.js"
+  },
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
