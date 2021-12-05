@@ -1,4 +1,6 @@
-const fs = require('fs');
+const fs = require('fs')
+
+const path = require('path')
 
 /**
  * Метод, для получения содержимого из целевой аудитории 
@@ -24,7 +26,29 @@ const fs = require('fs');
     return fs.lstatSync(filepath).isDirectory();
 }
 
+const renderContent = async (filepath, response) => {
+    if (isDirectory(filepath)) {
+        const directoryItems = await getDirectoryItems(filepath);
+
+        const directoryContentArray = [];
+
+        for (item of directoryItems){
+            let templateString = `<p>
+                <a href="/content?path=${path.join(filepath, item)}">${item}</a>
+            </p>`
+
+            directoryContentArray.push(templateString);
+        }
+        
+        const directoryContentHTML = directoryContentArray.join('<br>');
+
+        response.send(directoryContentHTML);
+    }
+}
+
+
 module.exports = {
     getDirectoryItems: getDirectoryItems,
     isDirectory: isDirectory,
+    renderContent: renderContent,
 };
