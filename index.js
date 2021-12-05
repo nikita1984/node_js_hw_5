@@ -11,11 +11,19 @@ app.get("/", function(request, response){
     
     (async (filepath) => {
         if (isDirectory(filepath)) {
-            const directoryContent = await getDirectoryItems(filepath);
-            response.render("index.hbs", {
-                directoryContentVisible: true,
-                directoryContent: directoryContent,
-            });
+            const directoryItems = await getDirectoryItems(filepath);
+
+            const directoryContentArray = [];
+
+            for (item of directoryItems){
+                let templateString = `<p><a href="/about?name=${item}">${item}</a></p><br>`
+
+                directoryContentArray.push(templateString);
+            }
+            
+            const directoryContentHTML = directoryContentArray.join('');
+
+            response.send(directoryContentHTML);
         }
     })(CWD);
 });
