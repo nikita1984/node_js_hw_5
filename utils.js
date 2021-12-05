@@ -2,6 +2,8 @@ const fs = require('fs')
 
 const path = require('path')
 
+const {EOL} = require('os')
+
 /**
  * Метод, для получения содержимого из целевой аудитории 
  * @param {string} directory - путь к целевой директории
@@ -30,6 +32,17 @@ const isFile = function (filepath) {
     return fs.lstatSync(filepath).isFile();
 }
 
+const getFileContents = (filepath) => {
+    const chunks = [];
+    return new Promise((resolve) => {
+        const stream = fs.createReadStream(filepath, 'utf-8');
+        stream.on('data', (chunk) => chunks.push(chunk));
+        stream.on('error', (err) => reject(err));
+        stream.on('end', () => resolve(chunks.toString('utf8').split(EOL)));
+    });     
+}
+
+
 const getContent = async (filepath) => {
     if (isDirectory(filepath)) {
         const directoryItems = await getDirectoryItems(filepath);
@@ -39,7 +52,7 @@ const getContent = async (filepath) => {
         for (item of directoryItems){
             let templateString = `<p>
                 <a href="/content?path=${path.join(filepath, item)}">${item}</a>
-            </p>`
+            </p>`;
 
             directoryContentArray.push(templateString);
         }
@@ -50,9 +63,17 @@ const getContent = async (filepath) => {
     }
 
     if (isFile(filepath)) {
-        const directoryContentHTML = '<p>isFile</p>'
+        const content = await getFileContents(filepath);
 
-        return directoryContentHTML;
+        const fileContentsTemplateArray = [];
+        for (item of content) {
+            let templateString = `<p>${item}</p>`;
+
+            fileContentsTemplateArray.push(templateString);
+        }
+        const HTMLContent = fileContentsTemplateArray.join('<br>');
+
+        return HTMLContent;
     }
 }
 
