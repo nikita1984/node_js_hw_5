@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 const express = require('express')
 
+const path = require('path')
+
 const  { getDirectoryItems, isDirectory } = require('./utils')
+
+const CWD = process.cwd();
 
 const app = express()
 app.set("view engine", "hbs");
 
 app.get("/", function(request, response){
-    const CWD = process.cwd();
     
     (async (filepath) => {
         if (isDirectory(filepath)) {
@@ -16,21 +19,44 @@ app.get("/", function(request, response){
             const directoryContentArray = [];
 
             for (item of directoryItems){
-                let templateString = `<p><a href="/about?name=${item}">${item}</a></p><br>`
+                let templateString = `<p>
+                    <a href="/content?path=${path.join(filepath, item)}">${item}</a>
+                </p>`
 
                 directoryContentArray.push(templateString);
             }
             
-            const directoryContentHTML = directoryContentArray.join('');
+            const directoryContentHTML = directoryContentArray.join('<br>');
 
             response.send(directoryContentHTML);
         }
     })(CWD);
 });
 
-app.use("/about", function(request, response){
-    let userName = request.query.name;
-    response.send("<h1>Информация</h1><p>" + userName + "</p>");
+app.use("/content", function(request, response){
+    const queryPath = request.query.path;
+
+
+    (async (filepath) => {
+        if (isDirectory(filepath)) {
+            const directoryItems = await getDirectoryItems(filepath);
+
+            const directoryContentArray = [];
+
+            for (item of directoryItems){
+                let templateString = `<p>
+                    <a href="/content?path=${path.join(filepath, item)}">${item}</a>
+                </p>`
+
+                directoryContentArray.push(templateString);
+            }
+            
+            const directoryContentHTML = directoryContentArray.join('<br>');
+
+            response.send(directoryContentHTML);
+        }
+    })(queryPath);
+
 });
 
 app.listen(3000)
