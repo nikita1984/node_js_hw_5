@@ -27,11 +27,20 @@ const {EOL} = require('os')
  const isDirectory = function (filepath) {
     return fs.lstatSync(filepath).isDirectory();
 }
-
+/**
+ * Проверяет наличие по входящему пути файла
+ * @param {string} filepath - путь к целевому файлу
+ * @returns {boolean} - возвращает true если по переданному пути находиться файл
+ */
 const isFile = function (filepath) {
     return fs.lstatSync(filepath).isFile();
 }
 
+/**
+ * Возвращает содержимое файла в виде массива
+ * @param {string} filepath - путь к целевому файлу
+ * @returns {Array} - содержимое файла в виде массива, элемент которого является строкой содержимого файла
+ */
 const getFileContents = (filepath) => {
     const chunks = [];
     return new Promise((resolve) => {
@@ -42,7 +51,11 @@ const getFileContents = (filepath) => {
     });     
 }
 
-
+/**
+ * Предоставляет содержимое файла или директории в виде HTML-строки
+ * @param {string} filepath - путь к целевому файлу или директории
+ * @returns {InnerHTML} - содержимое директории или файла в виде строки HTML-кода
+ */
 const getContent = async (filepath) => {
     if (isDirectory(filepath)) {
         const directoryItems = await getDirectoryItems(filepath);
